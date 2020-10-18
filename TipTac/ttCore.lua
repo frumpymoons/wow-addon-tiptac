@@ -418,12 +418,13 @@ SlashCmdList[modName] = function(cmd)
 	param1 = (param1 and param1:lower() or cmd:lower());
 	-- Options
 	if (param1 == "") then
-		local loaded, reason = LoadAddOn("TipTacOptions");
-		if (loaded) then
-			TipTacOptions:SetShown(not TipTacOptions:IsShown());
-		else
-			AzMsg("Could not open TicTac Options: |1"..tostring(reason).."|r. Please make sure the addon is enabled from the character selection screen.");
-		end
+		-- local loaded, reason = LoadAddOn("TipTacOptions");
+		-- if (loaded) then
+		-- 	TipTacOptions:SetShown(not TipTacOptions:IsShown());
+		-- else
+		-- 	AzMsg("Could not open TicTac Options: |1"..tostring(reason).."|r. Please make sure the addon is enabled from the character selection screen.");
+		-- end
+		TipTacOptions:SetShown(not TipTacOptions:IsShown());
 	-- Show Anchor
 	elseif (param1 == "anchor") then
 		tt:SetShown(not tt:IsShown());

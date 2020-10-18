@@ -1,4 +1,4 @@
-local cfg = TipTac_Config;
+local cfg;
 local modName = "TipTac";
 
 -- DropDown Lists
@@ -60,7 +60,7 @@ local options = {
 		{ type = "Check", var = "hidePvpText", label = "Hide PvP Text", tip = "Strips the PvP line from the tooltip", y = 10 },
 		{ type = "Check", var = "hideFactionText", label = "Hide Faction Text", tip = "Strips the Alliance or Horde faction text from the tooltip", x = 170 },
 		{ type = "Check", var = "hideRealmText", label = "Hide Coalesced Realm Text", tip = "Strips the Coalesced Realm text from the tooltip" },
- 	},
+	},
 	-- Colors
 	{
 		[0] = "Colors",
@@ -256,120 +256,125 @@ end
 --                                          Initialize Frame                                          --
 --------------------------------------------------------------------------------------------------------
 
-local f = CreateFrame("Frame",modName.."Options",UIParent, BackdropTemplateMixin and "BackdropTemplate");
+local f = CreateFrame("Frame",modName.."Options",UIParent,BackdropTemplateMixin and "BackdropTemplate");
+f:SetScript("OnEvent",function(self,event,...) self[event](self,event,...); end);
+f:RegisterEvent("PLAYER_ENTERING_WORLD")
 
-UISpecialFrames[#UISpecialFrames + 1] = f:GetName();
+function f:PLAYER_ENTERING_WORLD()
+	cfg = TipTac_Config;
+	UISpecialFrames[#UISpecialFrames + 1] = f:GetName();
 
-f.options = options;
+	f.options = options;
 
-f:SetSize(424,378);
-f:SetBackdrop({ bgFile = "Interface\\ChatFrame\\ChatFrameBackground", edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", tile = 1, tileSize = 16, edgeSize = 16, insets = { left = 3, right = 3, top = 3, bottom = 3 } });
-f:SetBackdropColor(0.1,0.22,0.35,1);
-f:SetBackdropBorderColor(0.1,0.1,0.1,1);
-f:EnableMouse(true);
-f:SetMovable(true);
-f:SetFrameStrata("DIALOG");
-f:SetToplevel(true);
-f:SetClampedToScreen(true);
-f:SetScript("OnShow",function(self) self:BuildCategoryPage(); end);
-f:Hide();
+	f:SetSize(424,378);
+	f:SetBackdrop({ bgFile = "Interface\\ChatFrame\\ChatFrameBackground", edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", tile = 1, tileSize = 16, edgeSize = 16, insets = { left = 3, right = 3, top = 3, bottom = 3 } });
+	f:SetBackdropColor(0.1,0.22,0.35,1);
+	f:SetBackdropBorderColor(0.1,0.1,0.1,1);
+	f:EnableMouse(true);
+	f:SetMovable(true);
+	f:SetFrameStrata("DIALOG");
+	f:SetToplevel(true);
+	f:SetClampedToScreen(true);
+	f:SetScript("OnShow",function(self) self:BuildCategoryPage(); end);
+	f:Hide();
 
-f.outline = CreateFrame("Frame",nil,f, BackdropTemplateMixin and "BackdropTemplate");
-f.outline:SetBackdrop({ bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", tile = 1, tileSize = 16, edgeSize = 16, insets = { left = 4, right = 4, top = 4, bottom = 4 } });
-f.outline:SetBackdropColor(0.1,0.1,0.2,1);
-f.outline:SetBackdropBorderColor(0.8,0.8,0.9,0.4);
-f.outline:SetPoint("TOPLEFT",12,-12);
-f.outline:SetPoint("BOTTOMLEFT",12,12);
-f.outline:SetWidth(84);
+	f.outline = CreateFrame("Frame",nil,f,BackdropTemplateMixin and "BackdropTemplate");
+	f.outline:SetBackdrop({ bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", tile = 1, tileSize = 16, edgeSize = 16, insets = { left = 4, right = 4, top = 4, bottom = 4 } });
+	f.outline:SetBackdropColor(0.1,0.1,0.2,1);
+	f.outline:SetBackdropBorderColor(0.8,0.8,0.9,0.4);
+	f.outline:SetPoint("TOPLEFT",12,-12);
+	f.outline:SetPoint("BOTTOMLEFT",12,12);
+	f.outline:SetWidth(84);
 
-f:SetScript("OnMouseDown",f.StartMoving);
-f:SetScript("OnMouseUp",function(self) self:StopMovingOrSizing(); cfg.optionsLeft = self:GetLeft(); cfg.optionsBottom = self:GetBottom(); end);
+	f:SetScript("OnMouseDown",f.StartMoving);
+	f:SetScript("OnMouseUp",function(self) self:StopMovingOrSizing(); cfg.optionsLeft = self:GetLeft(); cfg.optionsBottom = self:GetBottom(); end);
 
-if (cfg.optionsLeft) and (cfg.optionsBottom) then
-	f:SetPoint("BOTTOMLEFT",UIParent,"BOTTOMLEFT",cfg.optionsLeft,cfg.optionsBottom);
-else
-	f:SetPoint("CENTER");
-end
-
-f.header = f:CreateFontString(nil,"ARTWORK","GameFontHighlight");
-f.header:SetFont(GameFontNormal:GetFont(),22,"THICKOUTLINE");
-f.header:SetPoint("TOPLEFT",f.outline,"TOPRIGHT",10,-4);
-f.header:SetText(modName.." Options");
-
-f.vers = f:CreateFontString(nil,"ARTWORK","GameFontNormal");
-f.vers:SetPoint("TOPRIGHT",-20,-20);
-f.vers:SetText(GetAddOnMetadata(modName,"Version"));
-f.vers:SetTextColor(1,1,0.5);
-
-local function Reset_OnClick(self)
-	for index, option in ipairs(options[activePage]) do
-		if (option.var) then
-			cfg[option.var] = nil;	-- when cleared, they will read the default value from the metatable
-		end
+	if (cfg.optionsLeft) and (cfg.optionsBottom) then
+		f:SetPoint("BOTTOMLEFT",UIParent,"BOTTOMLEFT",cfg.optionsLeft,cfg.optionsBottom);
+	else
+		f:SetPoint("CENTER");
 	end
-	TipTac:ApplySettings();
-	f:BuildCategoryPage();
-end
 
-f.btnAnchor = CreateFrame("Button",nil,f,"UIPanelButtonTemplate", BackdropTemplateMixin and "BackdropTemplate");
-f.btnAnchor:SetSize(75,24);
-f.btnAnchor:SetPoint("BOTTOMLEFT",f.outline,"BOTTOMRIGHT",10,3);
-f.btnAnchor:SetScript("OnClick",function() TipTac:SetShown(not TipTac:IsShown()) end);
-f.btnAnchor:SetText("Anchor");
+	f.header = f:CreateFontString(nil,"ARTWORK","GameFontHighlight");
+	f.header:SetFont(GameFontNormal:GetFont(),22,"THICKOUTLINE");
+	f.header:SetPoint("TOPLEFT",f.outline,"TOPRIGHT",10,-4);
+	f.header:SetText(modName.." Options");
 
-f.btnReset = CreateFrame("Button",nil,f,"UIPanelButtonTemplate", BackdropTemplateMixin and "BackdropTemplate");
-f.btnReset:SetSize(75,24);
-f.btnReset:SetPoint("LEFT",f.btnAnchor,"RIGHT",38,0);
-f.btnReset:SetScript("OnClick",Reset_OnClick);
-f.btnReset:SetText("Defaults");
+	f.vers = f:CreateFontString(nil,"ARTWORK","GameFontNormal");
+	f.vers:SetPoint("TOPRIGHT",-20,-20);
+	f.vers:SetText(GetAddOnMetadata(modName,"Version"));
+	f.vers:SetTextColor(1,1,0.5);
 
-f.btnClose = CreateFrame("Button",nil,f,"UIPanelButtonTemplate", BackdropTemplateMixin and "BackdropTemplate");
-f.btnClose:SetSize(75,24);
-f.btnClose:SetPoint("BOTTOMRIGHT",-15,15);
-f.btnClose:SetScript("OnClick",function() f:Hide(); end);
-f.btnClose:SetText("Close");
+	local function Reset_OnClick(self)
+		for index, option in ipairs(options[activePage]) do
+			if (option.var) then
+				cfg[option.var] = nil;	-- when cleared, they will read the default value from the metatable
+			end
+		end
+		TipTac:ApplySettings();
+		f:BuildCategoryPage();
+	end
+
+	f.btnAnchor = CreateFrame("Button",nil,f,"UIPanelButtonTemplate");
+	f.btnAnchor:SetSize(75,24);
+	f.btnAnchor:SetPoint("BOTTOMLEFT",f.outline,"BOTTOMRIGHT",10,3);
+	f.btnAnchor:SetScript("OnClick",function() TipTac:SetShown(not TipTac:IsShown()) end);
+	f.btnAnchor:SetText("Anchor");
+
+	f.btnReset = CreateFrame("Button",nil,f,"UIPanelButtonTemplate");
+	f.btnReset:SetSize(75,24);
+	f.btnReset:SetPoint("LEFT",f.btnAnchor,"RIGHT",38,0);
+	f.btnReset:SetScript("OnClick",Reset_OnClick);
+	f.btnReset:SetText("Defaults");
+
+	f.btnClose = CreateFrame("Button",nil,f,"UIPanelButtonTemplate");
+	f.btnClose:SetSize(75,24);
+	f.btnClose:SetPoint("BOTTOMRIGHT",-15,15);
+	f.btnClose:SetScript("OnClick",function() f:Hide(); end);
+	f.btnClose:SetText("Close");
 
 --------------------------------------------------------------------------------------------------------
 --                                        Options Category List                                       --
 --------------------------------------------------------------------------------------------------------
 
-local listButtons = {};
+	local listButtons = {};
 
-local function CategoryButton_OnClick(self,button)
-	listButtons[activePage].text:SetTextColor(1,0.82,0);
-	listButtons[activePage]:UnlockHighlight();
-	activePage = self.index;
-	self.text:SetTextColor(1,1,1);
-	self:LockHighlight();
-	PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON);	-- "igMainMenuOptionCheckBoxOn"
-	f:BuildCategoryPage();
-end
-
-local buttonWidth = (f.outline:GetWidth() - 8);
-local function CreateCategoryButtonEntry(parent)
-	local b = CreateFrame("Button",nil,parent, BackdropTemplateMixin and "BackdropTemplate");
-	b:SetSize(buttonWidth,18);
-	b:SetScript("OnClick",CategoryButton_OnClick);
-	b:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight");
-	b:GetHighlightTexture():SetAlpha(0.7);
-	b.text = b:CreateFontString(nil,"ARTWORK","GameFontNormal");
-	b.text:SetPoint("LEFT",3,0);
-	listButtons[#listButtons + 1] = b;
-	return b;
-end
-
-for index, table in ipairs(options) do
-	local button = listButtons[index] or CreateCategoryButtonEntry(f.outline);
-	button.text:SetText(table[0]);
-	button.index = index;
-	if (index == 1) then
-		button:SetPoint("TOPLEFT",f.outline,"TOPLEFT",5,-6);
-	else
-		button:SetPoint("TOPLEFT",listButtons[index - 1],"BOTTOMLEFT");
+	local function CategoryButton_OnClick(self,button)
+		listButtons[activePage].text:SetTextColor(1,0.82,0);
+		listButtons[activePage]:UnlockHighlight();
+		activePage = self.index;
+		self.text:SetTextColor(1,1,1);
+		self:LockHighlight();
+		PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON);	-- "igMainMenuOptionCheckBoxOn"
+		f:BuildCategoryPage();
 	end
-	if (index == activePage) then
-		button.text:SetTextColor(1,1,1);
-		button:LockHighlight();
+
+	local buttonWidth = (f.outline:GetWidth() - 8);
+	local function CreateCategoryButtonEntry(parent)
+		local b = CreateFrame("Button",nil,parent);
+		b:SetSize(buttonWidth,18);
+		b:SetScript("OnClick",CategoryButton_OnClick);
+		b:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight");
+		b:GetHighlightTexture():SetAlpha(0.7);
+		b.text = b:CreateFontString(nil,"ARTWORK","GameFontNormal");
+		b.text:SetPoint("LEFT",3,0);
+		listButtons[#listButtons + 1] = b;
+		return b;
+	end
+
+	for index, table in ipairs(options) do
+		local button = listButtons[index] or CreateCategoryButtonEntry(f.outline);
+		button.text:SetText(table[0]);
+		button.index = index;
+		if (index == 1) then
+			button:SetPoint("TOPLEFT",f.outline,"TOPLEFT",5,-6);
+		else
+			button:SetPoint("TOPLEFT",listButtons[index - 1],"BOTTOMLEFT");
+		end
+		if (index == activePage) then
+			button.text:SetTextColor(1,1,1);
+			button:LockHighlight();
+		end
 	end
 end
 
