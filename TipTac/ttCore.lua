@@ -471,9 +471,6 @@ function tt:ApplySettings()
 	-- Set Scale, Backdrop, Gradient
 	for _, tip in ipairs(TT_TipsToModify) do
 		if (type(tip) == "table") and (type(tip.GetObjectType) == "function") then
-			if (tip == QuestScrollFrame) and (QuestScrollFrame.StoryTooltip) then
-				tip = QuestScrollFrame.StoryTooltip;
-			end
 			SetupGradientTip(tip);
 			tip:SetScale(cfg.gttScale);
 			tt:ApplyBackdrop(tip);
