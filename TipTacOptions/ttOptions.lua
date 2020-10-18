@@ -286,9 +286,28 @@ function f:PLAYER_ENTERING_WORLD()
 	f.outline:SetPoint("BOTTOMLEFT",12,12);
 	f.outline:SetWidth(84);
 
-	f:SetScript("OnMouseDown",f.StartMoving);
-	f:SetScript("OnMouseUp",function(self) self:StopMovingOrSizing(); cfg.optionsLeft = self:GetLeft(); cfg.optionsBottom = self:GetBottom(); end);
+	f:SetScript("OnMouseDown",function(self, button)
+		if button == "LeftButton" and not self.isMoving then
+			self:StartMoving();
+			self.isMoving = true;
+		end
+	end);
+	f:SetScript("OnMouseUp",function(self, button)
+		if button == "LeftButton" and self.isMoving then
+			self:StopMovingOrSizing();
+			self.isMoving = false;
+			cfg.optionsLeft = self:GetLeft();
+			cfg.optionsBottom = self:GetBottom();
+		end
+	end);
+	f:SetScript("OnHide", function(self)
+		if (self.isMoving) then
+			self:StopMovingOrSizing();
+			self.isMoving = false;
+		end
+	end)
 
+	f:ClearAllPoints()
 	if (cfg.optionsLeft) and (cfg.optionsBottom) then
 		f:SetPoint("BOTTOMLEFT",UIParent,"BOTTOMLEFT",cfg.optionsLeft,cfg.optionsBottom);
 	else
