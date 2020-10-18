@@ -864,7 +864,7 @@ local function ResolveGlobalNamedObjects(tipTable)
 	local resolved = {};
 	for index, tipName in ipairs(tipTable) do
 		-- lookup the global object from this name, assign false if nonexistent, to preserve the table entry
-		local tip = (_G[tipName] or false);
+		local tip = (_G[tipName] or tipName);
 
 		-- Check if this object has already been resolved. This can happen for thing like AtlasLoot, which sets AtlasLootTooltip = GameTooltip
 		if (resolved[tip]) then
