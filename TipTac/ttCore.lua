@@ -171,16 +171,18 @@ local TT_DefaultConfig = {
 -- Tips modified by TipTac in appearance and scale, you can add to this list if you want to modify more tips.
 -- Other addons can use TipTac:AddModifiedTip(tip,noHooks) to register their own tooltips if desired.
 local TT_TipsToModify = {
-	"GameTooltip",
-	"ShoppingTooltip1",
-	"ShoppingTooltip2",
-	"ItemRefTooltip",
-	"ItemRefShoppingTooltip1",
-	"ItemRefShoppingTooltip2",
+	_G.GameTooltip,
+	_G.ShoppingTooltip1,
+	_G.ShoppingTooltip2,
+	_G.ItemRefTooltip,
+	_G.ItemRefShoppingTooltip1,
+	_G.ItemRefShoppingTooltip2,
+	_G.FriendsTooltip,
+	_G.EmbeddedItemTooltip,
+	_G.QuestScrollFrame.StoryTooltip,
+	_G.QuestScrollFrame.CampaignTooltip,
 	-- 3rd party addon tooltips
-	"AtlasLootTooltip",
-	"QuestHelperTooltip",
-	"QuestGuru_QuestWatchTooltip",
+	_G.AtlasLootTooltip,
 };
 tt.tipsToModify = TT_TipsToModify;
 
