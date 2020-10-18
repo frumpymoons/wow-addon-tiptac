@@ -3,7 +3,7 @@ local unpack = unpack;
 
 -- Addon
 local modName = ...;
-local ttif = CreateFrame("Frame",modName, nil, BackdropTemplateMixin and "BackdropTemplate");
+local ttif = CreateFrame("Frame",modName);
 
 -- Register with TipTac core addon if available
 if (TipTac) then
@@ -288,7 +288,7 @@ end
 -- instancelock
 function LinkTypeFuncs:instancelock(link,linkType,guid,mapId,difficulty,encounterBits)
 	--AzDump(guid,mapId,difficulty,encounterBits)
-  	-- TipType Border Color -- Disable these 3 lines to color border. Az: Work into options?
+	-- TipType Border Color -- Disable these 3 lines to color border. Az: Work into options?
 --	if (cfg.if_itemQualityBorder) then
 --		self:SetBackdropBorderColor(1, .5, 0, 1);
 --	end
@@ -348,7 +348,7 @@ function LinkTypeFuncs:spell(link,linkType,id)
 		self:AddLine("SpellID: "..id..rank,unpack(cfg.if_infoColor));
 		self:Show();	-- call Show() to resize tip after adding lines
 	end
-  	-- TipType Border Color -- Disable these 3 lines to color border. Az: Work into options?
+	-- TipType Border Color -- Disable these 3 lines to color border. Az: Work into options?
 --	if (cfg.if_itemQualityBorder) then
 --		self:SetBackdropBorderColor(.44, .84, 1, 1);
 --	end
@@ -360,7 +360,7 @@ function LinkTypeFuncs:quest(link,linkType,id,level)
 		self:AddLine(format("QuestLevel: %d, QuestID: %d",level or 0,id or 0),unpack(cfg.if_infoColor));
 		self:Show();	-- call Show() to resize tip after adding lines
 	end
-  	-- TipType Border Color -- Disable these 3 lines to color border. Az: Work into options?
+	-- TipType Border Color -- Disable these 3 lines to color border. Az: Work into options?
 --	if (cfg.if_itemQualityBorder) then
 --		self:SetBackdropBorderColor(1, 1, 0, 1);
 --	end
@@ -379,7 +379,7 @@ function LinkTypeFuncs:currency(link,linkType,id)
 		self:AddLine(format("CurrencyID: %d",id),unpack(cfg.if_infoColor));
 		self:Show();	-- call Show() to resize tip after adding lines
 	end
-  	-- TipType Border Color -- Disable these 3 lines to color border. Az: Work into options?
+	-- TipType Border Color -- Disable these 3 lines to color border. Az: Work into options?
 --	if (cfg.if_itemQualityBorder) then
 --		self:SetBackdropBorderColor(0, .67, 0, 1);
 --	end
@@ -482,7 +482,7 @@ function LinkTypeFuncs:achievement(link,linkType,id,guid,completed,month,day,yea
 			self:Show();	-- call Show() to resize tip after adding lines
 		end
 	end
-  	-- TipType Border Color -- Disable these 3 lines to color border. Az: Work into options?
+	-- TipType Border Color -- Disable these 3 lines to color border. Az: Work into options?
 --	if (cfg.if_itemQualityBorder) then
 --		self:SetBackdropBorderColor(1, 1, 0, 1);
 --	end
