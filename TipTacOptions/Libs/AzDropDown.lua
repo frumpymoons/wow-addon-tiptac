@@ -93,7 +93,7 @@ local DEF_MAX_MENU_ITEMS = 16;
 --------------------------------------------------------------------------------------------------------
 
 -- Used for both the DropDownMenuMixin & DropDownFrameMixin
-local function ApplyBackdrop(self,backdrop,backdropColor,backdropBorderColor)
+local function AddBackdrop(self,backdrop,backdropColor,backdropBorderColor)
 	if (not backdropColor) then
 		backdropColor = backdrop and backdrop.backdropColor or AzDropDown.backdrop.backdropColor;
 	end
@@ -112,7 +112,7 @@ end
 --                                        DropDown Menu Mixin                                         --
 --------------------------------------------------------------------------------------------------------
 
-local DropDownMenuMixin = { ApplyBackdrop = ApplyBackdrop };
+local DropDownMenuMixin = { AddBackdrop = AddBackdrop };
 
 -- Calls the parent's "initFunc" to query the items
 function DropDownMenuMixin:QueryItems(parent)
@@ -192,9 +192,9 @@ function DropDownMenuMixin:Initialize(parent,point,parentPoint)
 	if (backdrop) then
 		backdropColor:SetRGB(parent:GetBackdropColor());
 		backdropBorderColor:SetRGBA(parent:GetBackdropBorderColor());
-		self:ApplyBackdrop(backdrop,backdropColor,backdropBorderColor);
+		self:AddBackdrop(backdrop,backdropColor,backdropBorderColor);
 	else
-		self:ApplyBackdrop(AzDropDown.backdrop);
+		self:AddBackdrop(AzDropDown.backdrop);
 	end
 
 	-- updates the menu items
@@ -425,7 +425,7 @@ function AzDropDown:CreateDropDown(parent,width,initFunc,selectValueFunc,isAutoS
 
 	Mixin(dd,DropDownFrameMixin);
 
-	dd:ApplyBackdrop(AzDropDown.backdrop);
+	dd:AddBackdrop(AzDropDown.backdrop);
 
 	-- dropdown display variables
 	dd.initFunc = initFunc;
