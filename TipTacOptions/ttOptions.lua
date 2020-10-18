@@ -395,6 +395,8 @@ function f:PLAYER_ENTERING_WORLD()
 			button:LockHighlight();
 		end
 	end
+
+	f:UnregisterEvent("PLAYER_ENTERING_WORLD")
 end
 
 --------------------------------------------------------------------------------------------------------
