@@ -318,7 +318,7 @@ tt.text = tt:CreateFontString(nil,"ARTWORK","GameFontHighlight");
 tt.text:SetText("TipTacAnchor");
 tt.text:SetPoint("LEFT",6,0);
 
-tt.close = CreateFrame("Button",nil,tt,"UIPanelCloseButton", BackdropTemplateMixin and "BackdropTemplate");
+tt.close = CreateFrame("Button",nil,tt,"UIPanelCloseButton");
 tt.close:SetSize(24,24);
 tt.close:SetPoint("RIGHT");
 
