@@ -3,7 +3,7 @@ local unpack = unpack;
 
 -- Addon
 local modName = ...;
-local ttif = CreateFrame("Frame",modName);
+local ttif = CreateFrame("Frame",modName.."ItemRef");
 
 -- Register with TipTac core addon if available
 if (TipTac) then

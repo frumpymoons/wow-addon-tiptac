@@ -2,7 +2,7 @@ local gtt = GameTooltip;
 
 -- Addon
 local modName = ...;
-local ttt = CreateFrame("Frame",modName,nil,BackdropTemplateMixin and "BackdropTemplate");
+local ttt = CreateFrame("Frame",modName.."Talents");
 ttt:Hide();
 
 -- String Constants
