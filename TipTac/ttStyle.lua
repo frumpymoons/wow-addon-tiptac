@@ -244,8 +244,10 @@ function ttStyle:ModifyUnitTooltip(u,first)
 
 	-- Info Line
 	local gttLine = _G["GameTooltipTextLeft"..lineInfo.Index];
-	gttLine:SetText(lineInfo:Concat());
-	gttLine:SetTextColor(1,1,1);
+	if (gttLine) then
+		gttLine:SetText(lineInfo:Concat());
+		gttLine:SetTextColor(1,1,1);
+	end
 	lineInfo:Clear();
 end
 
