@@ -228,15 +228,6 @@ local targetedByList;
 
 tt.u = u;
 
--- Hi-jack the GTT backdrop table for our own evil needs
-local tipBackdrop = GAME_TOOLTIP_BACKDROP_STYLE_DEFAULT or TOOLTIP_BACKDROP_STYLE_DEFAULT;
-tipBackdrop.backdropColor = CreateColor(1,1,1);
-tipBackdrop.backdropBorderColor = CreateColor(1,1,1);
-
--- To ensure that the alpha channel is applied to the backdrop color, we have to cheat a bit, by pointing the GetRGB() function to GetRGBA().
-tipBackdrop.backdropColor.GetRGB = ColorMixin.GetRGBA;
-tipBackdrop.backdropBorderColor.GetRGB = ColorMixin.GetRGBA;
-
 --------------------------------------------------------------------------------------------------------
 --                              MetaClass for Pushing Values Into Table                               --
 --------------------------------------------------------------------------------------------------------
@@ -475,20 +466,6 @@ function tt:ApplySettings()
 		self:UnregisterEvent("CURSOR_UPDATE");
 	end
 
-	-- Set Backdrop -- not setting "tileSize" as we dont tile
-	tipBackdrop.bgFile = cfg.tipBackdropBG;
-	tipBackdrop.edgeFile = cfg.tipBackdropEdge;
-	tipBackdrop.tile = false;
-	tipBackdrop.tileEdge = false;
-	tipBackdrop.edgeSize = cfg.backdropEdgeSize;
-	tipBackdrop.insets.left = cfg.backdropInsets;
-	tipBackdrop.insets.right = cfg.backdropInsets;
-	tipBackdrop.insets.top = cfg.backdropInsets;
-	tipBackdrop.insets.bottom = cfg.backdropInsets;
-
-	tipBackdrop.backdropColor:SetRGBA(unpack(cfg.tipColor));
-	tipBackdrop.backdropBorderColor:SetRGBA(unpack(cfg.tipBorderColor));
-
 	-- Set Scale, Backdrop, Gradient
 	for _, tip in ipairs(TT_TipsToModify) do
 		if (type(tip) == "table") and (type(tip.GetObjectType) == "function") then
@@ -517,7 +494,16 @@ end
 
 -- Applies the backdrop, color and border color. The GTT will often reset these internally.
 function tt:ApplyBackdrop(tip)
-	SharedTooltip_SetBackdropStyle(tip,tipBackdrop)
+	tip:SetBackdrop({
+		bgFile = cfg.tipBackdropBG,
+		edgeFile = cfg.tipBackdropEdge,
+		tile = false,
+		tileEdge = false,
+		edgeSize = cfg.backdropEdgeSize,
+		insets = { left = cfg.backdropInsets, right = cfg.backdropInsets, top = cfg.backdropInsets, bottom = cfg.backdropInsets },
+	})
+	tip:SetBackdropColor(unpack(cfg.tipColor))
+	tip:SetBackdropBorderColor(unpack(cfg.tipBorderColor))
 end
 
 --------------------------------------------------------------------------------------------------------
@@ -833,7 +819,7 @@ end
 function gttScriptHooks:OnTooltipCleared()
 	-- WoD: resetting the back/border color seems to be a necessary action, otherwise colors may stick when showing the next tooltip thing (world object tips)
 	-- BfA: The tooltip now also clears the backdrop in adition to color and bordercolor, so set it again here
-	tt:ApplyBackdrop(self);
+	-- tt:ApplyBackdrop(self);
 
 	-- remove the padding that might have been set to fit health/power bars
 	tt.xPadding = 0;
@@ -854,9 +840,9 @@ function gttScriptHooks:OnTooltipCleared()
 end
 
 -- OnHide Script -- Used to default the background and border color
---function gttScriptHooks:OnHide()
---	tt:ApplyBackdrop(self);
---end
+-- function gttScriptHooks:OnHide()
+-- 	tt:ApplyBackdrop(self);
+-- end
 
 --------------------------------------------------------------------------------------------------------
 --                                      GameTooltip Other Hooks                                       --
@@ -950,6 +936,9 @@ function tt:HookTips()
 
 	-- Replace GameTooltip_SetDefaultAnchor (For Re-Anchoring) -- Patch 3.2 made this function secure
 	hooksecurefunc("GameTooltip_SetDefaultAnchor",GTT_SetDefaultAnchor);
+	hooksecurefunc("SharedTooltip_SetBackdropStyle",function(self)
+		tt:ApplyBackdrop(self)
+	end)
 
 	-- Clear this function as it's not needed anymore
 	self.HookTips = nil;
