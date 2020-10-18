@@ -33,8 +33,15 @@ local cfg = {
 
 -- Tooltips to Hook into -- MUST be a GameTooltip widget -- If the main TipTac is installed, the TT_TipsToModify is used instead
 local tipsToModify = {
-	"GameTooltip",
-	"ItemRefTooltip",
+	_G.GameTooltip,
+	_G.ShoppingTooltip1,
+	_G.ShoppingTooltip2,
+	_G.ItemRefTooltip,
+	_G.ItemRefShoppingTooltip1,
+	_G.ItemRefShoppingTooltip2,
+	_G.EmbeddedItemTooltip,
+	_G.EmbeddedItemTooltip.ItemTooltip.Tooltip,
+	_G.GameTooltip.ItemTooltip.Tooltip,
 };
 -- Tips which will have an icon
 local tipsToAddIcon = {
@@ -108,12 +115,7 @@ end
 
 -- OnEvent
 ttif:SetScript("OnEvent",function(self,event,...)
-	-- What tipsToModify to use, TipTac's main addon, or our own?
-	if (TipTac and TipTac.tipsToModify) then
-		tipsToModify = TipTac.tipsToModify;
-	else
-		ResolveGlobalNamedObjects(tipsToModify)
-	end
+	ResolveGlobalNamedObjects(tipsToModify)
 
 	-- Use TipTac settings if installed
 	if (TipTac_Config) then
@@ -227,7 +229,7 @@ end
 -- HOOK: Apply hooks for all the tooltips to modify -- Only hook GameTooltip objects
 function ttif:DoHooks()
 	for index, tip in ipairs(tipsToModify) do
-		if (type(tip) == "table") and (type(tip.GetObjectType) == "function") and (tip:GetObjectType() == "GameTooltip") then
+		if (type(tip) == "table") and (tip:GetObjectType() == "GameTooltip") then
 			if (tipsToAddIcon[tip:GetName()]) then
 				self:CreateTooltipIcon(tip);
 			end
@@ -307,7 +309,11 @@ function LinkTypeFuncs:item(link,linkType,id)
 
 	-- Quality Border
 	if (cfg.if_itemQualityBorder) then
-		self:SetBackdropBorderColor(GetItemQualityColor(itemRarity or 0));
+		if self.IsEmbedded then
+			self:GetParent():GetParent():SetBackdropBorderColor(GetItemQualityColor(itemRarity or 0));
+		else
+			self:SetBackdropBorderColor(GetItemQualityColor(itemRarity or 0));
+		end
 	end
 
 	-- level + id -- Only alter the tip if we got either a valid "itemLevel" or "id"
