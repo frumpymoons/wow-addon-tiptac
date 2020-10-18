@@ -9,7 +9,7 @@ local tconcat = table.concat;
 
 -- Addon
 local modName = ...;
-local tt = CreateFrame("Frame",modName,UIParent, BackdropTemplateMixin and "BackdropTemplate");
+local tt = CreateFrame("Frame",modName,UIParent,BackdropTemplateMixin and "BackdropTemplate");
 
 -- Global Chat Message Function
 function AzMsg(msg) DEFAULT_CHAT_FRAME:AddMessage(tostring(msg):gsub("|1","|cffffff80"):gsub("|2","|cffffffff"),0.5,0.75,1.0); end
@@ -748,6 +748,13 @@ function gttScriptHooks:OnUpdate(elapsed)
 
 	-- WoD: This background color reset, from OnShow(), has been copied down here. It seems resetting the color in OnShow() wasn't enough, as the color changes after the tip is being shown
 	if (self:IsOwned(UIParent)) and (not self:GetUnit()) then
+		self:SetBackdropColor(unpack(cfg.tipColor));
+	end
+
+	if (self:IsOwned(UIParent)) and (not self:GetUnit()) and (GameTooltipStatusBar:IsShown()) and (tt.yPadding == 0) then
+		tt:SendElementEvent("OnPreStyleTip",gtt,u,true);
+		gtt:SetPadding(tt.xPadding,tt.yPadding);
+		GameTooltipStatusBar.text:SetText("")
 		self:SetBackdropColor(unpack(cfg.tipColor));
 	end
 

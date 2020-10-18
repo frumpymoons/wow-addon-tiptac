@@ -33,6 +33,7 @@ function HealthBarMixin:GetColor(u)
 end
 
 function HealthBarMixin:GetValueParams(u)
+	if not u.token then return end
 	local val = UnitHealth(u.token);
 	local max = UnitHealthMax(u.token);
 	return val, max, cfg.healthBarText;
@@ -60,6 +61,7 @@ end
 
 function PowerBarMixin:GetValueParams(u)
 	-- verify unit is still using the same power type, if not, update the bar color
+	if not u.token then return end
 	local newPowerType = UnitPowerType(u.token);
 	if (newPowerType ~= u.powerType) then
 		u.powerType = newPowerType;
@@ -154,8 +156,13 @@ end
 
 -- Creates a bar with the given mixins
 function ttBars:CreateBar(parent,tblMixin)
-	local bar = CreateFrame("StatusBar",nil,parent, BackdropTemplateMixin and "BackdropTemplate");
-	bar:Hide();
+	local bar;
+	if parent ~= GameTooltipStatusBar then
+		bar = CreateFrame("StatusBar",nil,parent);
+		bar:Hide();
+	else
+		bar = parent;
+	end
 
 --	bar:SetWidth(0);	-- Az: As of patch 3.3.3, setting the initial size will somehow mess up the texture. Previously this initilization was needed to fix an anchoring issue.
 --	bar:SetHeight(0);
@@ -175,10 +182,11 @@ end
 
 -- Initializes the anchoring position and color for each bar
 function ttBars:SetupBars(u)
-	for index, bar in ipairs(bars) do
+	for _, bar in ipairs(bars) do
 		bar:ClearAllPoints();
 
-		if (bar:GetVisibility(u)) then
+		local _, max = bar:GetValueParams(u);
+		if (bar:IsShown()) then
 			bar:SetPoint("BOTTOMLEFT",BAR_MARGIN_X,tt.yPadding + BAR_MARGIN_Y);
 			bar:SetPoint("BOTTOMRIGHT",-BAR_MARGIN_X,tt.yPadding + BAR_MARGIN_Y);
 
@@ -188,6 +196,7 @@ function ttBars:SetupBars(u)
 
 			bar:Show();
 		else
+			tt.yPadding = 0;
 			bar:Hide();
 		end
 	end
@@ -203,17 +212,19 @@ function ttBars:OnLoad()
 	-- Make two bars: Health & Power
 	local tip = GameTooltip;
 	bars[#bars + 1] = self:CreateBar(tip,PowerBarMixin);
-	bars[#bars + 1] = self:CreateBar(tip,HealthBarMixin);
+	bars[#bars + 1] = self:CreateBar(GameTooltipStatusBar,HealthBarMixin);
 	if (CastBarMixin) then
 		bars[#bars + 1] = self:CreateBar(tip,CastBarMixin);
 	end
+
+	GameTooltipStatusBar:SetScript("OnValueChanged", function() end)
 end
 
 function ttBars:OnApplyConfig(cfg)
-	GameTooltipStatusBar:SetStatusBarTexture(cfg.barTexture);
-	GameTooltipStatusBar:GetStatusBarTexture():SetHorizTile(false);	-- Az: 3.3.3 fix
-	GameTooltipStatusBar:GetStatusBarTexture():SetVertTile(false);	-- Az: 3.3.3 fix
-	GameTooltipStatusBar:SetHeight(cfg.barHeight);
+	-- GameTooltipStatusBar:SetStatusBarTexture(cfg.barTexture);
+	-- GameTooltipStatusBar:GetStatusBarTexture():SetHorizTile(false);	-- Az: 3.3.3 fix
+	-- GameTooltipStatusBar:GetStatusBarTexture():SetVertTile(false);	-- Az: 3.3.3 fix
+	-- GameTooltipStatusBar:SetHeight(cfg.barHeight);
 
 	for _, bar in ipairs(bars) do
 		bar:SetStatusBarTexture(cfg.barTexture);
@@ -239,9 +250,20 @@ function ttBars:OnPreStyleTip(tip,u,first)
 	for _, bar in ipairs(bars) do
 		if (bar:IsShown()) then
 			local val, max, fmt = bar:GetValueParams(u);
-			bar:SetMinMaxValues(0,max);
-			bar:SetValue(val);
+			if bar ~= GameTooltipStatusBar then
+				bar:SetMinMaxValues(0,max);
+				bar:SetValue(val);
+			end
 			bar:SetFormattedBarValues(val,max,fmt);
+
+			local tipWidth = tip:GetWidth();
+			local barWidth = bar:GetWidth();
+			local barTextWidth = bar.text:GetWidth();
+
+			if barTextWidth >= barWidth then
+				-- tip:SetWidth(tipWidth + 24);
+				tt.xPadding = (tt.xPadding + 38);
+			end
 		end
 	end
 end
