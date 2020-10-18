@@ -172,7 +172,11 @@ function ttBars:CreateBar(parent,tblMixin)
 	bar.bg:SetAllPoints();
 
 	bar.text = bar:CreateFontString(nil,"ARTWORK");
-	bar.text:SetPoint("CENTER");
+	if not cfg.barsCondenseValues then
+		bar.text:SetPoint("CENTER",1,0);
+	else
+		bar.text:SetPoint("CENTER",2,0);
+	end
 	bar.text:SetTextColor(1,1,1);
 
 	bar.SetFormattedBarValues = SetFormattedBarValues;
