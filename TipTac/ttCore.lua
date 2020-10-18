@@ -491,9 +491,9 @@ function tt:ApplySettings()
 	-- Set Scale, Backdrop, Gradient
 	for _, tip in ipairs(TT_TipsToModify) do
 		if (type(tip) == "table") and (type(tip.GetObjectType) == "function") then
-			if (tip == WorldMapTooltip) and (WorldMapTooltip.BackdropFrame) then
+			if (tip == GameTooltip) and (GameTooltip.BackdropFrame) then
 				tip:SetScale(cfg.gttScale);
-				tip = WorldMapTooltip.BackdropFrame;	-- workaround for the worldmap faux tip
+				tip = GameTooltip.BackdropFrame;	-- workaround for the worldmap faux tip
 			elseif (tip == QuestScrollFrame) and (QuestScrollFrame.StoryTooltip) then
 				tip = QuestScrollFrame.StoryTooltip;
 			end
