@@ -494,6 +494,7 @@ end
 
 -- Applies the backdrop, color and border color. The GTT will often reset these internally.
 function tt:ApplyBackdrop(tip)
+	if not tip or (tip.IsEmbedded or not tip.SetBackdrop) or tip:IsForbidden() then return end
 	tip:SetBackdrop({
 		bgFile = cfg.tipBackdropBG,
 		edgeFile = cfg.tipBackdropEdge,
@@ -819,7 +820,7 @@ end
 function gttScriptHooks:OnTooltipCleared()
 	-- WoD: resetting the back/border color seems to be a necessary action, otherwise colors may stick when showing the next tooltip thing (world object tips)
 	-- BfA: The tooltip now also clears the backdrop in adition to color and bordercolor, so set it again here
-	-- tt:ApplyBackdrop(self);
+	tt:ApplyBackdrop(self);
 
 	-- remove the padding that might have been set to fit health/power bars
 	tt.xPadding = 0;
