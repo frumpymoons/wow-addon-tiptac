@@ -182,7 +182,7 @@ azof.objects.Slider = {
 		self.high:SetText(option.max);
 	end,
 	CreateNew = function(self)
-		local f = CreateFrame("Frame",nil,self.owner, BackdropTemplateMixin and "BackdropTemplate");
+		local f = CreateFrame("Frame",nil,self.owner);
 		f:SetSize(292,32);
 
 		f.edit = CreateFrame("EditBox",GenerateObjectName("EditBox"),f,"InputBoxTemplate");
@@ -247,7 +247,7 @@ azof.objects.Check = {
 		self:SetChecked(cfgValue);
 	end,
 	CreateNew = function(self)
-		local f = CreateFrame("CheckButton",nil,self.owner, BackdropTemplateMixin and "BackdropTemplate");
+		local f = CreateFrame("CheckButton",nil,self.owner);
 		f:SetSize(26,26);
 		f:SetScript("OnEnter",CheckButton_OnEnter);
 		f:SetScript("OnClick",CheckButton_OnClick);
@@ -255,7 +255,7 @@ azof.objects.Check = {
 
 		f:SetNormalTexture("Interface\\Buttons\\UI-CheckBox-Up");
 		f:SetPushedTexture("Interface\\Buttons\\UI-CheckBox-Down");
-	 	f:SetHighlightTexture("Interface\\Buttons\\UI-CheckBox-Highlight");
+		f:SetHighlightTexture("Interface\\Buttons\\UI-CheckBox-Highlight");
 		f:SetDisabledCheckedTexture("Interface\\Buttons\\UI-CheckBox-Check-Disabled");
 		f:SetCheckedTexture("Interface\\Buttons\\UI-CheckBox-Check");
 
@@ -376,7 +376,7 @@ azof.objects.Color = {
 		self.texture:SetVertexColor(self.color:GetRGBA());
 	end,
 	CreateNew = function(self)
-		local f = CreateFrame("Button",nil,self.owner, BackdropTemplateMixin and "BackdropTemplate");
+		local f = CreateFrame("Button",nil,self.owner);
 		f:SetSize(18,18);
 		f:SetScript("OnEnter",ColorButton_OnEnter);
 		f:SetScript("OnLeave",ColorButton_OnLeave)
@@ -549,7 +549,7 @@ azof.objects.Text = {
 		self:SetText(cfgValue:gsub("|","||"));
 	end,
 	CreateNew = function(self)
-		local f = CreateFrame("EditBox",nil,self.owner, BackdropTemplateMixin and "BackdropTemplate");
+		local f = CreateFrame("EditBox",nil,self.owner,BackdropTemplateMixin and "BackdropTemplate");
 		f:SetSize(180,24);
 		f:SetScript("OnTextChanged",TextEdit_OnTextChanged);
 		f:SetScript("OnEnterPressed",f.ClearFocus);
