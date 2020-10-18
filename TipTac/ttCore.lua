@@ -675,9 +675,12 @@ function tt:ApplyUnitAppearance(tip,u,first)
 
 	-- Apply tooltip padding, if any
 	if (tt.xPadding ~= 0) or (tt.yPadding ~= 0) then
-		tip:SetPadding(tt.xPadding,tt.yPadding);
 		gtt_numLines = gtt:NumLines();
+		-- tip:SetPadding(tt.xPadding,tt.yPadding);
 	end
+
+	-- Needs to be outside of the if statement because units without a healthbar need to be adjusted
+	tip:SetPadding(tt.xPadding,tt.yPadding);
 end
 
 --------------------------------------------------------------------------------------------------------
@@ -827,7 +830,10 @@ function gttScriptHooks:OnTooltipCleared()
 	-- remove the padding that might have been set to fit health/power bars
 	tt.xPadding = 0;
 	tt.yPadding = 0;
-	--self:SetPadding(tt.xPadding,tt.yPadding);		-- [8.1.5] disabled, as it causes issues  -- Look into GTT.recalculatePadding & GameTooltip_CalculatePadding()
+
+	if (not self.ItemTooltip:IsShown()) then
+		self:SetPadding(tt.xPadding,tt.yPadding);		-- Don't adjust tooltips with embedded tooltip, causes flickering issues.
+	end
 
 	-- wipe the vars
 	wipe(u);
