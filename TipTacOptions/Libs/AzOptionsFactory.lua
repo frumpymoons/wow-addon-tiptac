@@ -259,7 +259,7 @@ azof.objects.Check = {
 		f:SetDisabledCheckedTexture("Interface\\Buttons\\UI-CheckBox-Check-Disabled");
 		f:SetCheckedTexture("Interface\\Buttons\\UI-CheckBox-Check");
 
-		f.text = f:CreateFontString("ARTWORK",nil,"GameFontNormalSmall");
+		f.text = f:CreateFontString(nil,"ARTWORK","GameFontNormalSmall");
 		f.text:SetPoint("LEFT",f,"RIGHT",0,1);
 
 		return f;
