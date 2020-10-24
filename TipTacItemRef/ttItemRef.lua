@@ -92,7 +92,30 @@ end
 --                                         TipTacItemRef Frame                                        --
 --------------------------------------------------------------------------------------------------------
 
+function ttif:VARIABLES_LOADED(event)
+	-- Use TipTac settings if installed
+	if (TipTac_Config) then
+		cfg = TipTac_Config;
+	end
+
+	-- Hook tips and apply settings
+	self:HookTips();
+	self:OnApplyConfig();
+
+	-- Cleanup; we no longer need to receive any events
+	self:UnregisterEvent("VARIABLES_LOADED");
+end
+
+function ttif:ADDON_LOADED(event,addon)
+	if (addon == "Blizzard_GarrisonUI") then
+		self:AddModifiedTip(_G.GarrisonShipyardMapMissionTooltip.ItemTooltip.Tooltip)
+		self:UnregisterEvent("ADDON_LOADED");
+	end
+end
+
+ttif:SetScript("OnEvent",function(self,event,...) self[event](self,event,...); end);
 ttif:RegisterEvent("VARIABLES_LOADED");
+ttif:RegisterEvent("ADDON_LOADED");
 
 -- Resolves the given table array of string names into their global objects
 local function ResolveGlobalNamedObjects(tipTable)
@@ -112,24 +135,6 @@ local function ResolveGlobalNamedObjects(tipTable)
 		tipTable[index] = tip;
 	end
 end
-
--- OnEvent
-ttif:SetScript("OnEvent",function(self,event,...)
-	ResolveGlobalNamedObjects(tipsToModify)
-
-	-- Use TipTac settings if installed
-	if (TipTac_Config) then
-		cfg = TipTac_Config;
-	end
-
-	-- Hook tips and apply settings
-	self:DoHooks();
-	self:OnApplyConfig();
-
-	-- Cleanup; we no longer need to receive any events
-	self:UnregisterAllEvents();
-	self:SetScript("OnEvent",nil);
-end);
 
 -- Apply Settings -- It seems this may be called from TipTac:OnApplyConfig() before we have received our VARIABLES_LOADED, so ensure we have created the tip objects
 function ttif:OnApplyConfig()
@@ -226,22 +231,44 @@ local function OnTooltipCleared(self)
 	end
 end
 
--- HOOK: Apply hooks for all the tooltips to modify -- Only hook GameTooltip objects
-function ttif:DoHooks()
-	for index, tip in ipairs(tipsToModify) do
-		if (type(tip) == "table") and (tip:GetObjectType() == "GameTooltip") then
-			if (tipsToAddIcon[tip:GetName()]) then
-				self:CreateTooltipIcon(tip);
-			end
-			hooksecurefunc(tip,"SetHyperlink",SetHyperlink_Hook);
-			hooksecurefunc(tip,"SetUnitAura",SetUnitAura_Hook);
-			hooksecurefunc(tip,"SetUnitBuff",SetUnitAura_Hook);
-			hooksecurefunc(tip,"SetUnitDebuff",SetUnitAura_Hook);
-			tip:HookScript("OnTooltipSetItem",OnTooltipSetItem);
-			tip:HookScript("OnTooltipSetSpell",OnTooltipSetSpell);
-			tip:HookScript("OnTooltipCleared",OnTooltipCleared);
+function ttif:DoHooks(tip)
+	if (type(tip) == "table") and (tip:GetObjectType() == "GameTooltip") then
+		if (tipsToAddIcon[tip:GetName()]) then
+			self:CreateTooltipIcon(tip);
 		end
+		hooksecurefunc(tip,"SetHyperlink",SetHyperlink_Hook);
+		hooksecurefunc(tip,"SetUnitAura",SetUnitAura_Hook);
+		hooksecurefunc(tip,"SetUnitBuff",SetUnitAura_Hook);
+		hooksecurefunc(tip,"SetUnitDebuff",SetUnitAura_Hook);
+		tip:HookScript("OnTooltipSetItem",OnTooltipSetItem);
+		tip:HookScript("OnTooltipSetSpell",OnTooltipSetSpell);
+		tip:HookScript("OnTooltipCleared",OnTooltipCleared);
 	end
+end
+
+-- HOOK: Apply hooks for all the tooltips to modify -- Only hook GameTooltip objects
+function ttif:HookTips()
+	ResolveGlobalNamedObjects(tipsToModify);
+	for index, tip in ipairs(tipsToModify) do
+		self:DoHooks(tip);
+	end
+end
+
+-- Allows other mods to "register" tooltips or frames to be modified by TipTac
+function ttif:AddModifiedTip(tip)
+	if (type(tip) == "string") then
+		tip = _G[tip];
+	end
+	if (type(tip) == "table") and (type(tip.GetObjectType) == "function") then
+		-- if this tooltip is already modified, abort
+		if (tIndexOf(tipsToModify,tip)) then
+			return;
+		end
+		tipsToModify[#tipsToModify + 1] = tip;
+	end
+
+	ResolveGlobalNamedObjects(tipsToModify);
+	self:DoHooks(tip);
 end
 
 --------------------------------------------------------------------------------------------------------

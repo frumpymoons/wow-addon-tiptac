@@ -390,6 +390,13 @@ function tt:CVAR_UPDATE(event,var,value)
 	end
 end
 
+function tt:ADDON_LOADED(event,addon)
+	if (addon == "Blizzard_GarrisonUI") then
+		self:AddModifiedTip(_G.GarrisonShipyardMapMissionTooltip)
+		self:UnregisterEvent("ADDON_LOADED");
+	end
+end
+
 tt:SetScript("OnMouseDown",tt.StartMoving);
 tt:SetScript("OnMouseUp",function(self) self:StopMovingOrSizing(); cfg.left, cfg.top = self:GetLeft(), self:GetTop(); end);
 tt:SetScript("OnEvent",function(self,event,...) self[event](self,event,...); end);
@@ -398,6 +405,7 @@ tt:RegisterEvent("PLAYER_LOGIN");
 tt:RegisterEvent("PLAYER_LEVEL_UP");
 tt:RegisterEvent("VARIABLES_LOADED");
 tt:RegisterEvent("CVAR_UPDATE");
+tt:RegisterEvent("ADDON_LOADED");
 
 --------------------------------------------------------------------------------------------------------
 --                                           Slash Handling                                           --
@@ -411,12 +419,6 @@ SlashCmdList[modName] = function(cmd)
 	param1 = (param1 and param1:lower() or cmd:lower());
 	-- Options
 	if (param1 == "") then
-		-- local loaded, reason = LoadAddOn("TipTacOptions");
-		-- if (loaded) then
-		-- 	TipTacOptions:SetShown(not TipTacOptions:IsShown());
-		-- else
-		-- 	AzMsg("Could not open TicTac Options: |1"..tostring(reason).."|r. Please make sure the addon is enabled from the character selection screen.");
-		-- end
 		TipTacOptions:SetShown(not TipTacOptions:IsShown());
 	-- Show Anchor
 	elseif (param1 == "anchor") then
