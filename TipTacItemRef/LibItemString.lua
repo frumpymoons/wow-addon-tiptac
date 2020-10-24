@@ -331,6 +331,6 @@ end
 
 -- GLOBAL function staying compatible with the old "GetUpgradedItemLevel.lua" unit
 -- OBSOLETE: Use LibItemString:GetTrueItemLevel(itemLink) instead
-function GetUpgradedItemLevelFromItemLink(itemLink)
-	return LIS:GetTrueItemLevel(itemLink);
-end
+-- function GetUpgradedItemLevelFromItemLink(itemLink)
+-- 	return LIS:GetTrueItemLevel(itemLink);
+-- end
