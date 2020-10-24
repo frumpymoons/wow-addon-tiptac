@@ -229,6 +229,12 @@ local function OnTooltipCleared(self)
 	if (self.SetIconTextureAndText) then
 		self:SetIconTextureAndText();
 	end
+	-- Reset embedded tooltip border color
+	if (cfg.if_itemQualityBorder) then
+		if self.IsEmbedded then
+			self:GetParent():GetParent():SetBackdropBorderColor(unpack(cfg.tipBorderColor))
+		end
+	end
 end
 
 function ttif:DoHooks(tip)
