@@ -252,6 +252,14 @@ if (TipTacItemRef) then
 	};
 end
 
+-- TipTacDropDown Support -- Az: this category page is full
+if (TipTacItemRef) then
+	options[#options + 1] = {
+		[0] = "DropDown",
+		{ type = "Check", var = "if_enable", label = "Enable DropDown Modifications", tip = "Turns on or off all features of the TipTacDropDown addon" },
+	};
+end
+
 --------------------------------------------------------------------------------------------------------
 --                                          Initialize Frame                                          --
 --------------------------------------------------------------------------------------------------------
@@ -266,7 +274,7 @@ function f:PLAYER_ENTERING_WORLD()
 
 	f.options = options;
 
-	f:SetSize(424,378);
+	f:SetSize(424,#options*20);
 	f:SetBackdrop({ bgFile = "Interface\\ChatFrame\\ChatFrameBackground", edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", tile = 1, tileSize = 16, edgeSize = 16, insets = { left = 3, right = 3, top = 3, bottom = 3 } });
 	f:SetBackdropColor(0.1,0.22,0.35,1);
 	f:SetBackdropBorderColor(0.1,0.1,0.1,1);
