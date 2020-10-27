@@ -166,6 +166,9 @@ local TT_DefaultConfig = {
 	if_smartIcons = true,
 	if_borderlessIcons = false,
 	if_iconSize = 42,
+
+	-- DropDown
+	dd_enable = true,
 };
 
 -- Tips modified by TipTac in appearance and scale, you can add to this list if you want to modify more tips.

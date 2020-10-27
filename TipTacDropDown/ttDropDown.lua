@@ -63,38 +63,30 @@ end
 -- Applies the backdrop, color and border color.
 function ttdd:ApplyBackdrop(dropdown)
 	if not cfg or not dropdown or not dropdown.SetBackdrop or dropdown:IsForbidden() then return; end
-	-- Store the Blizzard default backdrop, so we can restore it
-	if not defaults[dropdown] then
-		defaults[dropdown] = dropdown.backdropInfo;
-	end
-	if not cfg.if_enable then
-		dropdown:SetBackdrop(defaults[dropdown]);
-		do
-			local r, g, b = 1, 1, 1;
-			if dropdown.backdropColor then
-				r, g, b = dropdown.backdropColor:GetRGB();
-			end
-			local a = dropdown.backdropColorAlpha or 1;
-			dropdown:SetBackdropColor(r, g, b, a);
-		end
-		do
-			local r, g, b = 1, 1, 1;
-			if dropdown.backdropBorderColor then
-				r, g, b = dropdown.backdropBorderColor:GetRGB();
-			end
-			local a = dropdown.backdropBorderColorAlpha or 1;
-			dropdown:SetBackdropBorderColor(r, g, b, a);
-		end
-		return;
-	end
-	dropdown:SetBackdrop({
+	local backdrop = {
 		bgFile = cfg.tipBackdropBG,
 		edgeFile = cfg.tipBackdropEdge,
 		tile = false,
 		tileEdge = false,
 		edgeSize = cfg.backdropEdgeSize,
 		insets = { left = cfg.backdropInsets, right = cfg.backdropInsets, top = cfg.backdropInsets, bottom = cfg.backdropInsets },
-	});
-	dropdown:SetBackdropColor(unpack(cfg.tipColor));
-	dropdown:SetBackdropBorderColor(unpack(cfg.tipBorderColor));
+	};
+	-- Store the Blizzard default backdrop, so we can restore it
+	if not defaults[dropdown] then
+		defaults[dropdown] = dropdown.backdropInfo;
+	end
+
+	local bdc, bc = {}, {};
+	if cfg.dd_enable then
+		bdc.r, bdc.g, bdc.b, bdc.a = unpack(cfg.tipColor);
+		bc.r, bc.g, bc.b, bc.a = unpack(cfg.tipBorderColor);
+	else
+		bdc.r, bdc.g, bdc.b = dropdown.backdropColor:GetRGB();
+		bdc.a = dropdown.backdropColorAlpha or 1;
+		bc.r, bc.g, bc.b = dropdown.backdropBorderColor:GetRGB();
+		bc.a = dropdown.backdropBorderColorAlpha or 1;
+	end
+	dropdown:SetBackdrop(cfg.dd_enable and backdrop or defaults[dropdown]);
+	dropdown:SetBackdropColor(bdc.r, bdc.g, bdc.b, bdc.a);
+	dropdown:SetBackdropBorderColor(bc.r, bc.g, bc.b, bc.a);
 end

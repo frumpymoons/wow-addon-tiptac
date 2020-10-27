@@ -253,10 +253,10 @@ if (TipTacItemRef) then
 end
 
 -- TipTacDropDown Support -- Az: this category page is full
-if (TipTacItemRef) then
+if (TipTacDropDown) then
 	options[#options + 1] = {
 		[0] = "DropDown",
-		{ type = "Check", var = "if_enable", label = "Enable DropDown Modifications", tip = "Turns on or off all features of the TipTacDropDown addon" },
+		{ type = "Check", var = "dd_enable", label = "Enable DropDown Modifications", tip = "Turns on or off all features of the TipTacDropDown addon" },
 	};
 end
 
