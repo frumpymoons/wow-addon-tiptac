@@ -1,3 +1,15 @@
+TipTac Changes | 2020 Oct 27
+----------------------------
+- Updated the TOC verstion to 90001 for the Shadowlands Pre-patch.
+- Fixed code related to API changes in 9.0.1 (BackdropTemplate).
+- Fixed code related to API changes in 9.0.1 (C_CurrencyInfo.GetCurrencyInfo).
+- Removed the "WorldMapTooltip", as it has been removed.
+- Fixed padding issue on units without a health bar.
+- Show health bar on tooltips like the gates in battlegrounds.
+- TipTacItemRef: Set quality border color on embedded item tooltips. This can be seen on world quest tooltips with item rewards.
+- TipTacDropDown: New module to also change backdrop and border color on dropdown menus.
+- All modules are now packaged into the main addon folder (TipTac).
+
 TipTac Changes | 2019 Mar 31
 ----------------------------
 - Updated the TOC version to 80100 for the Tides of Vengeance 8.1 patch.
@@ -527,7 +539,7 @@ TipTac Changes | 2007 Dec 26
 
 TipTac Changes | 2007 Dec 06
 ----------------------------
-- TipTac now shows the buffs of the unit, debuffs are still work in progress (will be added soon™, I promise).
+- TipTac now shows the buffs of the unit, debuffs are still work in progress (will be added soonï¿½, I promise).
 - Increased the mouse anchor offsets boundaries to -200/+200.
 - Added the WorldMapTooltip to the list of tips changed in scale and appearence.
 - Fixed a bug in the OnShow hook of the modified tips.

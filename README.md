@@ -8,4 +8,4 @@ I also removed a commented code block in the original addon that was causing an 
 
 ## Installing this version of the addon
 
-Download from [here](https://github.com/enolgor/wow-addon-tiptac/archive/master.zip) the latest changes, open the zip and copy&paste the four tiptac folders inside the zip to the Interface/AddOns folder of the game.
+Download from [here](https://github.com/frumpymoons/wow-addon-tiptac/archive/master.zip) the latest changes, open the zip and copy&paste the four tiptac folders inside the zip to the Interface/AddOns folder of the game.
