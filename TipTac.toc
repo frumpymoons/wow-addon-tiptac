@@ -6,18 +6,15 @@
 ## SavedVariables: TipTac_Config
 TipTacOptions\Libs\AzDropDown.lua
 TipTacOptions\Libs\AzOptionsFactory.lua
-
 TipTac\ttCore.lua
 TipTac\ttStyle.lua
 TipTac\ttBars.lua
 TipTac\ttAuras.lua
 TipTac\ttIcons.lua
 TipTac\ttHyperlink.lua
-
+TipTacDropDown\ttDropDown.lua
 TipTacItemRef\LibItemString.lua
 TipTacItemRef\ttItemRef.lua
-
 TipTacTalents\ttTalents.lua
-
 TipTacOptions\ttLayouts.lua
 TipTacOptions\ttOptions.lua
