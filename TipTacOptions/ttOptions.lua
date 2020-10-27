@@ -150,7 +150,6 @@ local options = {
 	-- Bar Types
 	{
 		[0] = "Bar Types",
-		{ type = "Check", var = "hideDefaultBar", label = "Hide the Default Health Bar", tip = "Check this to hide the default health bar" },
 		{ type = "Check", var = "barsCondenseValues", label = "Show Condensed Bar Values", tip = "You can enable this option to condense values shown on the bars. It does this by showing 57254 as 57.3k as an example" },
 		{ type = "Check", var = "healthBar", label = "Show Health Bar", tip = "Will show a health bar of the unit.", y = 12 },
 		{ type = "DropDown", var = "healthBarText", label = "Health Bar Text", list = DROPDOWN_BARTEXTFORMAT },

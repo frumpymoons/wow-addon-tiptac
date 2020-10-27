@@ -190,14 +190,11 @@ function ttBars:SetupBars(u)
 		bar:ClearAllPoints();
 
 		local _, max = bar:GetValueParams(u);
-		if (bar:IsShown()) then
+		if (bar:GetVisibility(u)) then
 			bar:SetPoint("BOTTOMLEFT",BAR_MARGIN_X,tt.yPadding + BAR_MARGIN_Y);
 			bar:SetPoint("BOTTOMRIGHT",-BAR_MARGIN_X,tt.yPadding + BAR_MARGIN_Y);
-
 			bar:SetStatusBarColor(bar:GetColor(u));
-
 			tt.yPadding = (tt.yPadding + cfg.barHeight + BAR_SPACING);
-
 			bar:Show();
 		else
 			tt.yPadding = 0;
@@ -225,11 +222,6 @@ function ttBars:OnLoad()
 end
 
 function ttBars:OnApplyConfig(cfg)
-	-- GameTooltipStatusBar:SetStatusBarTexture(cfg.barTexture);
-	-- GameTooltipStatusBar:GetStatusBarTexture():SetHorizTile(false);	-- Az: 3.3.3 fix
-	-- GameTooltipStatusBar:GetStatusBarTexture():SetVertTile(false);	-- Az: 3.3.3 fix
-	-- GameTooltipStatusBar:SetHeight(cfg.barHeight);
-
 	for _, bar in ipairs(bars) do
 		bar:SetStatusBarTexture(cfg.barTexture);
 		bar:GetStatusBarTexture():SetHorizTile(false);	-- Az: 3.3.3 fix
@@ -244,8 +236,7 @@ function ttBars:OnPreStyleTip(tip,u,first)
 	if (first) then
 		self:SetupBars(u);
 
-		-- Hide GTT Status bar, we have our own, which is prettier!
-		if (cfg.hideDefaultBar) then
+		if (not cfg.healthBar) then
 			GameTooltipStatusBar:Hide();
 		end
 	end
@@ -265,7 +256,6 @@ function ttBars:OnPreStyleTip(tip,u,first)
 			local barTextWidth = bar.text:GetWidth();
 
 			if barTextWidth >= barWidth then
-				-- tip:SetWidth(tipWidth + 24);
 				tt.xPadding = (tt.xPadding + 38);
 			end
 		end

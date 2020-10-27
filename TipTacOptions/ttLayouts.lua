@@ -47,7 +47,6 @@ local layout_presets = {
 		fadeTime = 0.1,
 		hideWorldTips = true,
 
-		hideDefaultBar = true,
 		healthBar = true,
 		healthBarClassColor = true,
 		healthBarText = "value",
@@ -90,7 +89,6 @@ local layout_presets = {
 		classification_rare = "%s|r (Rare) ",
 		classification_rareelite = "+%s|r (Rare) ",
 
-		hideDefaultBar = true,
 		healthBar = true,
 		healthBarClassColor = true,
 		healthBarText = "value",
@@ -132,7 +130,6 @@ local layout_presets = {
 		classification_rare = "%s|r (Rare) ",
 		classification_rareelite = "+%s|r (Rare) ",
 
-		hideDefaultBar = false,
 		healthBar = false,
 		manaBar = false,
 		powerBar = false,
@@ -162,7 +159,6 @@ local layout_presets = {
 		classification_rare = "Level %s|cffff66ff Rare",
 		classification_rareelite = "Level %s|cffffaaff Rare Elite",
 
-		hideDefaultBar = false,
 		healthBar = false,
 		manaBar = false,
 		powerBar = false,
@@ -220,7 +216,6 @@ local layout_presets = {
 		overrideFade = false,
 		hideWorldTips = false,
 
-		hideDefaultBar = false,
 		healthBar = false,
 		manaBar = false,
 		powerBar = false,

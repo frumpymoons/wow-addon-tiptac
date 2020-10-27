@@ -99,7 +99,6 @@ local TT_DefaultConfig = {
 	barHeight = 6,
 	barTexture = "Interface\\TargetingFrame\\UI-StatusBar",
 
-	hideDefaultBar = true,
 	barsCondenseValues = false,
 	healthBar = true,
 	healthBarClassColor = true,
