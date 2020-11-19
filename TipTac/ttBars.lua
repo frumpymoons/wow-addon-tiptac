@@ -121,7 +121,7 @@ end
 
 -- Format Number Value -- kilo, mega, giga
 local function FormatValue(val)
-	if (not cfg.barsCondenseValues) or (val < 10000) then
+	if (not cfg.barsCondenseValues) or (val < 1000) then
 		return tostring(floor(val));
 	elseif (val < 1000000) then
 		return ("%.1fk"):format(val / 1000);
