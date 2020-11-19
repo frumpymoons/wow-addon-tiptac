@@ -57,6 +57,16 @@ function ttdd:OnApplyConfig()
 		if backdrop then
 			self:ApplyBackdrop(backdrop);
 		end
+
+		backdrop = _G["ADD_DropDownList"..i.."MenuBackdrop"];
+		if backdrop then
+			self:ApplyBackdrop(backdrop);
+		end
+
+		backdrop = _G["ADD_DropDownList"..i.."Backdrop"];
+		if backdrop then
+			self:ApplyBackdrop(backdrop);
+		end
 	end
 end
 
