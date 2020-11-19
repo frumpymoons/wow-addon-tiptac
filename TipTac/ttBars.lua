@@ -172,11 +172,7 @@ function ttBars:CreateBar(parent,tblMixin)
 	bar.bg:SetAllPoints();
 
 	bar.text = bar:CreateFontString(nil,"ARTWORK");
-	if not cfg.barsCondenseValues then
-		bar.text:SetPoint("CENTER",1,0);
-	else
-		bar.text:SetPoint("CENTER",2,0);
-	end
+	bar.text:SetPoint("CENTER",1,0);
 	bar.text:SetTextColor(1,1,1);
 
 	bar.SetFormattedBarValues = SetFormattedBarValues;
@@ -250,13 +246,19 @@ function ttBars:OnPreStyleTip(tip,u,first)
 				bar:SetValue(val);
 			end
 			bar:SetFormattedBarValues(val,max,fmt);
+			if (not cfg.barsCondenseValues) or (val < 1000) then
+				bar.text:SetPoint("CENTER",1,0)
+			else
+				bar.text:SetPoint("CENTER",2,0)
+			end
 
 			local tipWidth = tip:GetWidth();
 			local barWidth = bar:GetWidth();
-			local barTextWidth = bar.text:GetWidth();
+			local barTextWidth = bar.text:GetStringWidth() + 4;
 
 			if barTextWidth >= barWidth then
-				tt.xPadding = (tt.xPadding + 38);
+				-- tt.xPadding = (tt.xPadding + 38);
+				tip:SetWidth(tipWidth + (barTextWidth - barWidth));
 			end
 		end
 	end
