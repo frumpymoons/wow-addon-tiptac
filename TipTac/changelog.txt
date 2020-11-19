@@ -1,6 +1,11 @@
+TipTac Changes | 2020 Nov 19
+----------------------------
+- Updated the TOC version to 90002 for Shadowlands.
+- Also abbreviate health numbers between 1000 and 9999 (1000 -> 1k).
+
 TipTac Changes | 2020 Oct 27
 ----------------------------
-- Updated the TOC verstion to 90001 for the Shadowlands Pre-patch.
+- Updated the TOC version to 90001 for the Shadowlands Pre-patch.
 - Fixed code related to API changes in 9.0.1 (BackdropTemplate).
 - Fixed code related to API changes in 9.0.1 (C_CurrencyInfo.GetCurrencyInfo).
 - Removed the "WorldMapTooltip", as it has been removed.
